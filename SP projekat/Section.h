@@ -42,7 +42,7 @@ private:
 	int	addr;
 	//int /**/sh_offset;	ima tabelu?
 	int	size;
-	//int		sh_link;
+	//int		sh_link;	tabela relokacija ima pokazivac kod sebe
 	//int		sh_info;
 	//int		sh_addralign;	poravnjanje - 0 i stebeni 2
 	//int		sh_entsize;		velicina ulaza ako su fiksne

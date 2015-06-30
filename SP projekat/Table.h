@@ -20,7 +20,7 @@ private:
 protected:
 	void resetIterator() { iterator = first; }
 	T getItEnt() { return iterator->entry; }
-	//T *getItEntPointer() { return &(iterator->entry); }
+	T *getItEntPointer() { return &(iterator->entry); }
 	bool getBoolIt() { return iterator; }
 	void iteratorNext() { iterator = iterator->next; }
 
@@ -48,6 +48,7 @@ public:
 			while (cur->next) cur = cur->next;
 			cur->next = newE;
 		}
+		iterator = newE;
 	}
 	void removeAll()
 	{

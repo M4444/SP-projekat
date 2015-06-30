@@ -20,6 +20,10 @@ int main(int argc, char *argv[])
 	output.open(argv[2]);
 
 	/*
+	cout << (char)181;
+	dword d = WA.creteMemRep("2,24",45, 1, 4);
+	cout << d[0];
+	//
 	string str = "123456";
 	int len, integ = stoi(str);
 	try{
@@ -70,6 +74,11 @@ int main(int argc, char *argv[])
 				{
 					cout << "*Section already defined*";
 					return -3;
+				}
+				catch (OutOfRange)
+				{
+					cout << "*Number out of range*";
+					return -4;
 				}
 				catch (EndOfFile)
 				{

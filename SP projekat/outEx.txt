@@ -1,19 +1,13 @@
 .global a, c
 .extern b
 .text
-jo a
-jo e
-jo b
-jo d
+jo 16 a
+jo 16 e
+jo 16 b
+jo 16 d
 d: .long d
 mov eax,b
 mov c,eax
 mov eax,e
 .data
 .skip 8
-e: .long a-e+d
-.long c
-.long .bss
-a: .long b
-.bss
-c: .skip 8

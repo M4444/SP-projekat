@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "FRefTab.h"
 
 using namespace std;
 
@@ -47,16 +48,30 @@ private:
 			binding : 4;	// Local or global (4 bits)
 	char	reserved;		// Unused
 	Section	*section;		// Section pointer
+	bool	defined;		// Defined
+	FRefTab *fRefTab;		// Pointer to forward reference table
 
 public:
 	Elf_Sym() {}
-	Elf_Sym(string n, Section *sec, STT t, STB b, int val=0, int s=0)
-		:name(n), value(val), size(s), type(t), binding(b), reserved(0), section(sec) {}
+	Elf_Sym(string n, bool def, Section *sec, STT t, STB b, int val=0, int s=0)
+		:name(n), value(val), size(s), type(t), binding(b), reserved(0), section(sec), defined(def), fRefTab(NULL) {}
 
 	string getName() { return name; }
-	void copyBinding(Elf_Sym s) { binding = s.binding; }
+	void copyInfo(Elf_Sym s) { value = s.value; binding = s.binding; section = s.section; defined = s.defined; }
+	char getBinding() { return binding; }
+	Section	*getSection() { return section; }
+	int getValue() { return value; }
+	bool getDef(){ return defined; }
+	void addFRef(int off, RT type) 
+	{
+		if (fRefTab == NULL) fRefTab = new FRefTab(off, type);
+		else fRefTab->addFRef(off, type);
+	}
 };
 
 #define INS_SIZE 4;
 
 // 11:34 ako treba da ima proveru za global i extern simbole, dodatna polja
+
+// ~ add sym to simbol table
+// label = sym;

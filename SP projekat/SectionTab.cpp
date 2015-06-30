@@ -1,5 +1,6 @@
 #include "SectionTab.h"
 #include "SymTab.h"
+#include "ByteSection.h"
 
 //SectionTab::SectionTab()
 //{
@@ -28,17 +29,37 @@ void SectionTab::createSection(string secTypeName, string name)
 
 	if (secTypeName.compare(".text") == 0)
 	{
-		current = new Section(name, SHT_PROGBITS, SHF_ALLOC | SHF_EXECINSTR);
+		current = new ByteSection(name, SHT_PROGBITS, SHF_ALLOC | SHF_EXECINSTR);
 	}
 	else if (secTypeName.compare(".bss") == 0)
 	{
-		current = new Section(name, SHT_NOBITS, SHF_ALLOC | SHF_WRITE);
+		current = new ByteSection(name, SHT_NOBITS, SHF_ALLOC | SHF_WRITE);
 	}
 	else if (secTypeName.compare(".data") == 0)
 	{
-		current = new Section(name, SHT_PROGBITS, SHF_ALLOC | SHF_WRITE);
+		current = new ByteSection(name, SHT_PROGBITS, SHF_ALLOC | SHF_WRITE);
 	}
+	RelTab *relTab = new RelTab(symTab, current);
+
 	endInsert(current);
+	endInsert(relTab);
+}
+
+int SectionTab::addSymRel(string name, RT type, int off)
+{
+	Section *sec;
+	for (resetIterator(); getBoolIt(); iteratorNext())
+	{
+		sec = getItEnt();
+		if ((sec->getName()).compare(".rel") == 0)
+		{
+			RelTab *relTab = (RelTab*) sec;
+			if (relTab->getBSPointer() == current)
+			{
+				return relTab->addRel(name, type, off);
+			}
+		}
+	}
 }
 
 /*

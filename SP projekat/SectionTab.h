@@ -5,6 +5,9 @@
 #include "Table.h"
 #include "Section.h"
 #include "SymTab.h"
+#include "RelTab.h"
+#include "ByteSection.h"
+#include "FRefTab.h"
 
 using namespace std;
 
@@ -14,11 +17,28 @@ class SectionTab : public Table<Section*>
 {
 private:
 	//void trySection(string fullnSecName, string dotSecton);
-	Section *current;
+	ByteSection *current;
 
 	SymTab *symTab;
+	FRefTab *freftab;
+	/*
+	ByteSection	*textSec;
+	ByteSection *dataSec;
+	ByteSection	*bssSec;
+	RelTab *textRelTab;
+	RelTab *dataRelTab;
+	RelTab *bssRelTab;*/
 public:
-	SectionTab() { symTab = new SymTab(); current = NULL; }
+	SectionTab() 
+	{ 
+		current = NULL; 
+		symTab = new SymTab(); 
+		freftab = new FRefTab();
+		/*
+		textSec = NULL;
+		dataSec = NULL;
+		bssSec = NULL;*/
+	}
 	~SectionTab();
 
 
@@ -38,5 +58,7 @@ public:
 	//SymTab *getSymTab() { return symTab; }
 
 	void addToSymTab(string sym, bool def, STT type, STB binding, int val = 0) 
-	{ symTab->add(sym, def ? current : 0, type, binding, val); }
+	{ symTab->addSym(sym, def, def ? current : NULL, type, binding, val); }
+	void addToTextSec(dword insMem) { current->endInsert(insMem); }
+	int addSymRel(string name, RT type, int off);
 };

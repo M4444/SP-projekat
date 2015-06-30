@@ -2,29 +2,37 @@
 
 using namespace std;
 
-void SymTab::add(string sym, Section *section, STT type, STB binding, int val)
+void SymTab::addSym(string sym, bool def, Section *section, STT type, STB binding, int val)
 {
-	Elf_Sym old, s = Elf_Sym(sym, section, type, binding, val);
-	// ~ add sym to simbol table
-	// label = sym;
+	Elf_Sym *old, s = Elf_Sym(sym, def, section, type, binding, val);
 
-	// s.name = pomeraj u string tabli do imena simbola
-	// s.value = pomeraj u trenutnoj sekciji
-	// s.size = ?;	// "Sve instrukcije su velicine reci (4 bajta)."
-	// s.type = STT_SECTION; ?
-	// s.binding = STB_LOCAL; ?
-	// s.reserved = 0;
-	// s.section = "Indeks sekcije u tabeli zaglavlja sekcija za koji je posmatrani simbol vezan."
-
-	for (resetIterator(); getBoolIt(); iteratorNext())
+	for (resetIterator(); getBoolIt(); iteratorNext())  // ako postoji, azuriraj
 	{
-		old = getItEnt();
-		if (sym.compare(old.getName()) == 0)
+		old = getItEntPointer();
+		if (sym.compare(old->getName()) == 0)
 		{
-			s.copyBinding(old);
-			replItEnt(s);
+			old->copyInfo(s);
+			//replItEnt(s);
 			return;
 		}
 	}
 	endInsert(s);
+}
+
+Elf_Sym *SymTab::addUndSym(string sym, int off)
+{
+	Elf_Sym *s = new Elf_Sym(sym, false, NULL, STT_OBJECT, STB_LOCAL);
+	endInsert(*s);
+	return getItEntPointer();
+}
+
+Elf_Sym *SymTab::getSymRef(string name)
+{
+	Elf_Sym *tek;
+	for (resetIterator(); getBoolIt(); iteratorNext())
+	{
+		tek = getItEntPointer();
+		if (name.compare(tek->getName()) == 0) return tek;
+	}
+	return NULL;
 }
