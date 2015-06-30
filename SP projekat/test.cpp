@@ -14,7 +14,16 @@ int main(int argc, char *argv[])
 	string line;
 	string word;
 
-	WordAnalyzer WA = WordAnalyzer();
+	WordAnalyzer WA;
+	try
+	{
+		WA = WordAnalyzer(argv[3]);
+	}
+	catch (BadArg)
+	{
+		cout << "*Invalid third argument*";
+		return -1;
+	}
 
 	input.open(argv[1]);
 	output.open(argv[2]);
@@ -67,18 +76,23 @@ int main(int argc, char *argv[])
 				}
 				catch (BadSyntax)
 				{
-					cout << "*Syntax error*";
+					cout << "*Syntax error*" << endl;
 					return -2;
-				}
-				catch (SectionRedefinition)
-				{
-					cout << "*Section already defined*";
-					return -3;
 				}
 				catch (OutOfRange)
 				{
-					cout << "*Number out of range*";
+					cout << "*Number out of range*" << endl;
+					return -3;
+				}
+				catch (SectionRedefinition)
+				{
+					cout << "*Section already defined*" << endl;
 					return -4;
+				}
+				catch (BSSwrite)
+				{
+					cout << "*Can't write to BSS*" << endl;
+					return -5;
 				}
 				catch (EndOfFile)
 				{
@@ -98,14 +112,8 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		cout << "*Unable to open input file*";
+		cout << "*Unable to open input file*" << endl;
 		return -1;
-	}
-	try { WA.end(); }	// end WordAnalyzer
-	catch (BadSyntax)
-	{
-		cout << "*Syntax error*";
-		return -2;
 	}
 
 	return 0;

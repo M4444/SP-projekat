@@ -22,7 +22,13 @@ int RelTab::addRel(string name, RT type, int off)
 		}
 		if (sym->getBinding() == STB_LOCAL)
 		{
-			rel = Elf_Rel(off, type, sym->getSection());
+			if (sym->getSection() == NULL) rel = Elf_Rel(off, type, NULL);	// dodati fref na mesto
+			else
+			{
+				string sec = sym->getSection()->getName();
+				rel = Elf_Rel(off, type, symTab->getSymRef(sec));
+			}
+			//rel = Elf_Rel(off, type, );
 			endInsert(rel);
 			return (-1)*INS_SIZE + sym->getValue();
 		}
@@ -32,7 +38,26 @@ int RelTab::addRel(string name, RT type, int off)
 	{
 		sym = symTab->addUndSym(name, off);
 		sym->addFRef(off, type);
-		sym = NULL;
 		return 0;
+	}
+}
+
+void RelTab::outTab(ofstream *output)
+{
+	ofstream &out = *output;
+
+	string name = bTab->getName();
+	name = name.substr(0, 4);
+	if (name.compare(".bss") == 0) return;
+
+	out << "#.rel" << bTab->getName() << endl;
+	out << "offset\t\tType\t\t\Val[" << bTab->getName() << "]:" << endl;
+
+	Elf_Rel *tek;
+	for (resetIterator(); getBoolIt(); iteratorNext())
+	{
+		tek = getItEntPointer();
+
+		tek->outRel(output);
 	}
 }

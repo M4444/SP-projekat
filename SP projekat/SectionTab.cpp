@@ -1,6 +1,7 @@
 #include "SectionTab.h"
 #include "SymTab.h"
 #include "ByteSection.h"
+#include "WordAnalyzer.h"
 
 //SectionTab::SectionTab()
 //{
@@ -41,6 +42,8 @@ void SectionTab::createSection(string secTypeName, string name)
 	}
 	RelTab *relTab = new RelTab(symTab, current);
 
+	symTab->addSym(name, true, current, STT_SECTION, STB_LOCAL, 0);
+
 	endInsert(current);
 	endInsert(relTab);
 }
@@ -62,51 +65,84 @@ int SectionTab::addSymRel(string name, RT type, int off)
 	}
 }
 
-/*
-void SectionTab::trySection(string fullnSecName, string dotSecton)
+void SectionTab::backpatching()
 {
-	string secNumS, secName;
-	int secNumI;
-	int l = dotSecton.length();
+	//get section from symbol
+	//value from symbol
+	//get offset from patch
+	//get rel type from patch
 
-	secName = fullnSecName.substr(0, l);
-	if (secName.compare(dotSecton) == 0)
+	//replace entry in ByteTable
+	Elf_Sym *sym;
+	FRef fr;
+
+	Section *sec;
+	int val;
+	int offset;
+	RT rt;
+	while (true)
 	{
-		secNumS = fullnSecName.substr(l);
-		if (secNumS != "") secNumI = stoi(secNumS);
-		else secNumI = 0;
-		if (sectionExists(secName, secNumI)) throw SectionRedefinition();
-		// secTab->defineSection(dotSecton, secNumI)..
+		sym = symTab->getUnpSym();
+		if (sym == NULL) break;
+
+		cout << 1;
+		while (true)
+		{
+			fr = sym->removeFRTE();
+			if (fr.getPatch() < 0) break;
+
+			sec = sym->getSection();
+			val = sym->getValue();
+			rt = fr.getRelType();
+			offset = fr.getPatch();
+
+			if (sec == NULL) continue;
+			string name = sec->getName();
+			name = name.substr(0, 4);
+			if (name.compare(".bss") == 0) continue;
+
+			Section *tekSec;
+			for (resetIterator(); getBoolIt(); iteratorNext())
+			{
+				tekSec = getItEnt();
+				if ((tekSec->getName()).compare(sec->getName()) == 0)
+				{
+					ByteSection *byteSec = (ByteSection*)sec;		
+					dword insMem = WordAnalyzer::creteMemRep(rt, val);
+					byteSec->replace(insMem, offset);
+					break;
+				}
+			}
+		}
 	}
 }
 
-bool SectionTab::setSection(string sec)
+void SectionTab::outSecs(ofstream *output)
 {
-	trySection(sec, ".bss");
-
-	string secNumS, secName;
-	int secNumI;
-	
-	int l = string(".bss").length();
-
-	secName = sec.substr(0, 4);
-	if (secName.compare(".bss") == 0)
+	Section *sec;
+	for (resetIterator(); getBoolIt(); iteratorNext())
 	{
-		secNumS = sec.substr(4);
-		if (secNumS != "") secNumI = stoi(secNumS);
-		else secNumI = 0;
-		if (sectionExists(secName, secNumI)) throw SectionRedefinition();
-		// define section (.bss, secNumI)..
+		sec = getItEnt();
+		if ((sec->getName()).compare(".rel") == 0)
+		{
+			RelTab *relTab = (RelTab*)sec;
+			
+			relTab->outTab(output);
+		}
 	}
-
-	secName = sec.substr(0, 5);
-	if (secName.compare(".text") == 0)
+	for (resetIterator(); getBoolIt(); iteratorNext())
 	{
-		secNumS = sec.substr(5);
-		if (secNumS != "") secNumI = stoi(secNumS);
-		else secNumI = 0;
-		if (sectionExists(secName, secNumI)) throw SectionRedefinition();
-		// define section (.bss, secNumI)..
-	}
+		sec = getItEnt();
+		if ((sec->getName()).compare(".rel") != 0)
+		{
+			string name = sec->getName();
+			name = name.substr(0, 4);
+			if (name.compare(".bss") != 0)
+			{
+				ByteSection *byteSec = (ByteSection*)sec;
 
-}*/
+				byteSec->outTab(output);
+			}
+		}
+	}
+}

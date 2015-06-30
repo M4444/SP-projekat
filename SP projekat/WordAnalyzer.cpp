@@ -1,9 +1,16 @@
 #include "WordAnalyzer.h"
 #include <math.h>
+#include <iostream>
+#include <fstream>
+#include "EnumRelType.h"
 //#include <cstdint>	// za int32_t
 
-WordAnalyzer::WordAnalyzer()
+WordAnalyzer::WordAnalyzer(char* outSep, char *name)
 {
+	if (outSep[0] == '0') outputSep = false;
+	else if (outSep[0] == '1') outputSep = true;
+	else throw BadArg();
+	outName = name;
 	secTab = new SectionTab();
 	//sectionDefinition = false;
 	//stringDefinition = false;
@@ -16,11 +23,6 @@ WordAnalyzer::WordAnalyzer()
 
 WordAnalyzer::~WordAnalyzer()
 {
-}
-
-void WordAnalyzer::end()
-{
-	if (sectionDefinition || stringDefinition) throw BadSyntax();
 }
 
 int WordAnalyzer::checkNum(string numS)
@@ -54,10 +56,8 @@ bool WordAnalyzer::trySection(string fullnSecName, string dotSecton)
 	{
 		secNumS = fullnSecName.substr(l);
 		secNumI = checkNum(secNumS);
-		//if (secNumI < 0) throw BadSyntax();
 
 		secTab->setCurrSecSize(loCnt);
-		//loCnt = 0;
 
 		if (secTab->sectionExists(fullnSecName)) throw SectionRedefinition();
 		secTab->createSection(secName, fullnSecName);
@@ -88,6 +88,62 @@ dword WordAnalyzer::creteMemRep(int op)
 	Rep[0] = op & 0xff;
 	return Rep;
 }
+
+dword WordAnalyzer::creteMemRep(RT type, int val)
+{
+	dword Rep;
+
+	if (type == RT_IMM32 || type == RT_IMM2x16)
+	{
+		Rep[3] = (val & 0xff000000) >> 24;
+
+		Rep[2] = (val & 0xff0000) >> 16;
+
+		Rep[1] = (val & 0xff00) >> 8;
+
+		Rep[0] = val & 0xff;
+	}
+	if (type == RT_IMM18)
+	{
+		Rep[2] |= (val & 0x30000) >> 3;
+
+		Rep[1] = (val & 0xff00) >> 8;
+
+		Rep[0] = val & 0xff;
+	}
+	else if (type == RT_IMM21 || type == RT_IMM21_PC)
+	{
+		Rep[2] = (val & 0x1f0000) >> 16;
+
+		Rep[1] = (val & 0xff00) >> 8;
+
+		Rep[0] = val & 0xff;
+	}
+	else if (type == RT_IMM24 || type == RT_IMM24_PC)
+	{
+		Rep[2] = (val & 0xff0000) >> 16;
+
+		Rep[1] = (val & 0xff00) >> 8;
+
+		Rep[0] = val & 0xff;
+	}
+	else if (type == RT_IMM5)
+	{
+		Rep[2] = (val & 0x18) >> 3;
+
+		Rep[1] = (val & 7) << 5;
+	}
+	else if (type == RT_IMM16)
+	{
+		Rep[2] = (val & 0xf800) >> 11;
+
+		Rep[1] = (val & 0x7f8) >> 3;
+
+		Rep[0] = (val & 7) << 5;
+	}
+	return Rep;
+}
+
 dword WordAnalyzer::creteMemRep(string type, int instr, int op0, int op1, int op2, int op3)
 {
 	dword Rep;
@@ -267,7 +323,7 @@ void WordAnalyzer::creteInstEntry(string instr, string *instrOp, int instrOpNum)
 
 		if (instr.compare("ldr") == 0) insMem = creteMemRep("4,4,18", 9, dstI, srcI, immI);
 		if (instr.compare("str") == 0) insMem = creteMemRep("4,4,18", 10, dstI, srcI, immI);
-		secTab->addToTextSec(insMem);
+		secTab->addMemToCurSec(insMem);
 	}
 	else if (instr.compare("and") == 0 || instr.compare("or") == 0 || instr.compare("not") == 0
 		|| instr.compare("test") == 0
@@ -289,7 +345,7 @@ void WordAnalyzer::creteInstEntry(string instr, string *instrOp, int instrOpNum)
 		if (instr.compare("mov") == 0) insMem = creteMemRep("4,4,18", 25, dstI, srcI);
 		if (instr.compare("in") == 0) insMem = creteMemRep("4,4,18", 26, dstI, srcI);
 		if (instr.compare("out") == 0) insMem = creteMemRep("4,4,18", 27, dstI, srcI);
-		secTab->addToTextSec(insMem);
+		secTab->addMemToCurSec(insMem);
 	}
 	else if (instr.compare("je") == 0 || instr.compare("jne") == 0 || instr.compare("jge") == 0
 		|| instr.compare("jg") == 0 || instr.compare("jle") == 0 || instr.compare("jl") == 0
@@ -333,7 +389,7 @@ void WordAnalyzer::creteInstEntry(string instr, string *instrOp, int instrOpNum)
 		if (instr.compare("jo") == 0) insMem = creteMemRep("5,21", 19, dstI, immI);
 		if (instr.compare("jno") == 0) insMem = creteMemRep("5,21", 20, dstI, immI);
 		if (instr.compare("call") == 0) insMem = creteMemRep("5,21", 21, dstI, immI);
-		secTab->addToTextSec(insMem);
+		secTab->addMemToCurSec(insMem);
 	}
 	else if (instr.compare("ret") == 0 || instr.compare("iret") == 0 || instr.compare("jmp") == 0)
 	{
@@ -366,7 +422,7 @@ void WordAnalyzer::creteInstEntry(string instr, string *instrOp, int instrOpNum)
 			}
 		}
 		dword insMem = creteMemRep("2,24", 22, type, immI);
-		secTab->addToTextSec(insMem);
+		secTab->addMemToCurSec(insMem);
 	}
 	else if (instr.compare("push") == 0 || instr.compare("pop") == 0)
 	{
@@ -378,7 +434,7 @@ void WordAnalyzer::creteInstEntry(string instr, string *instrOp, int instrOpNum)
 		dword insMem;
 		if (instr.compare("push") == 0) insMem = creteMemRep("5,21", 23, reg);
 		if (instr.compare("pop") == 0) insMem = creteMemRep("5,21", 24, reg);
-		secTab->addToTextSec(insMem);
+		secTab->addMemToCurSec(insMem);
 	}
 	else if (instr.compare("shr") == 0 || instr.compare("shl") == 0)
 	{
@@ -408,7 +464,7 @@ void WordAnalyzer::creteInstEntry(string instr, string *instrOp, int instrOpNum)
 		dword insMem;
 		if (instr.compare("shr") == 0) insMem = creteMemRep("4,4,5,13", 28, dstI, srcI, immI);
 		if (instr.compare("shl") == 0) insMem = creteMemRep("4,4,5,13", 29, dstI, srcI, immI);
-		secTab->addToTextSec(insMem);
+		secTab->addMemToCurSec(insMem);
 	}
 	else if (instr.compare("int") == 0)
 	{
@@ -418,7 +474,7 @@ void WordAnalyzer::creteInstEntry(string instr, string *instrOp, int instrOpNum)
 
 		if (src<0 || src >15) throw OutOfRange();
 		dword insMem = creteMemRep("4,22", 30, src);
-		secTab->addToTextSec(insMem);
+		secTab->addMemToCurSec(insMem);
 	}
 	else if (instr.compare("ldch") == 0 || instr.compare("ldcl") == 0)
 	{
@@ -446,7 +502,7 @@ void WordAnalyzer::creteInstEntry(string instr, string *instrOp, int instrOpNum)
 			}
 		}
 		dword insMem = creteMemRep("4,1,16,5", 31, dstI, hl, immI);
-		secTab->addToTextSec(insMem);
+		secTab->addMemToCurSec(insMem);
 	}
 	else if (instr.compare("ldcl1") == 0 || instr.compare("ldch2") == 0)
 	{
@@ -470,13 +526,71 @@ void WordAnalyzer::creteInstEntry(string instr, string *instrOp, int instrOpNum)
 			}
 			else
 			{
-				immI = secTab->addSymRel(immS, RT_IMM16, loCnt);
+				immI = secTab->addSymRel(immS, RT_IMM2x16, loCnt);
 			}
 		}
 		if (instr.compare("ldcl1") == 0) immI &= 0xffff;
 		if (instr.compare("ldch2") == 0) immI = (immI & 0xffff0000) >> 16;
 		dword insMem = creteMemRep("4,1,16,5", 31, dstI, hl, immI);
-		secTab->addToTextSec(insMem);
+		secTab->addMemToCurSec(insMem);
+	}
+}
+
+void WordAnalyzer::creteLongEntry(string word)
+{
+	int longVal = 0;
+	if (word[0] == '-')
+	{
+		word.erase(word.begin());
+		longVal = checkNum(word);
+		if (longVal > pow(2, 32 - 1)) throw OutOfRange();
+		if (longVal == 0) throw BadSyntax();
+		longVal *= -1;
+	}
+	else
+	{
+		if (word[0] >= '1' && word[0] <= '9')
+		{
+			longVal = checkNum(word);
+			if (longVal > pow(2, 32 - 1) - 1) throw OutOfRange();
+		}
+		else
+		{
+			longVal = secTab->addSymRel(word, RT_IMM32, loCnt);
+		}
+	}
+	dword insMem = creteMemRep(longVal);
+	secTab->addMemToCurSec(insMem);
+
+	expectNewLine = true;
+	cdp = NONE;
+}
+
+void WordAnalyzer::backpatching()
+{
+	secTab->backpatching();
+}
+
+void WordAnalyzer::writeOutTabs()		//@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+{
+	ofstream output;
+
+	if (outputSep)
+	{
+		output.open("Symbol table.txt");
+		secTab->outSymTab(&output);
+		output.close();
+
+		output.open("Sections.txt");
+		secTab->outSecs(&output);
+		output.close();
+	}
+	else
+	{
+		output.open(outName);
+		secTab->outSymTab(&output);
+		secTab->outSecs(&output);
+		output.close();
 	}
 }
 
@@ -512,6 +626,8 @@ void WordAnalyzer::process(string word, bool newLine)
 			{
 				// jos nesto za kraj (FRefTab)
 				// ako se skace u okvuru iste sekcije izbrisati zapis o relokaciji na kraju
+				//backpatching();
+				writeOutTabs();
 				throw EndOfFile();
 			}
 			else if (determineSec(word))
@@ -527,13 +643,13 @@ void WordAnalyzer::process(string word, bool newLine)
 				secTab->addToSymTab(word, true, STT_OBJECT/*?*/, STB_LOCAL, loCnt);
 			}
 			else if (!determineIns(word)) throw BadSyntax();	// da li je instrukcija
-				else
-				{
-					instr = word;
-					instrOpNum = 0;
-					cdp = INSTR;
-					expectSameLine = true;
-				}
+			else
+			{
+				instr = word;
+				instrOpNum = 0;
+				cdp = INSTR;
+				expectSameLine = true;
+			}
 		}
 		break;
 
@@ -577,7 +693,7 @@ void WordAnalyzer::process(string word, bool newLine)
 		break;
 
 	case SECTION:
-		if (newLine) 
+		if (newLine)
 		{
 			loCnt = 0;
 			cdp = NONE;
@@ -593,38 +709,24 @@ void WordAnalyzer::process(string word, bool newLine)
 		}
 		break;
 
+	case LONG:
+		creteLongEntry(word);
+		break;
+
 	case SKIP:
 		int val = checkNum(word);
-		loCnt += val;
-		cdp = NONE;
-		break;
-		
-	case LONG:	
-		int longVal=0;
-		if (word[0] == '-')
-		{
-			word.erase(word.begin());
-			longVal = checkNum(word);
-			if (longVal > pow(2, 8 - 1)) throw OutOfRange();
-			if (longVal == 0) throw BadSyntax();
-			longVal *= -1;
-		}
+		if (secTab->checkBssCur()) loCnt += val;
 		else
 		{
-			if (word[0] >= '1' && word[0] <= '9')
+			if ((val % INS_SIZE) != 0) throw BadSyntax();
+			dword insMem = creteMemRep(0);
+			for (int i = 0; i < val / INS_SIZE; i++)
 			{
-				longVal = checkNum(word);
-				if (longVal > pow(2, 8 - 1) - 1) throw OutOfRange();
-			}
-			else
-			{
-				longVal = secTab->addSymRel(word, RT_IMM32, loCnt);
+				secTab->addMemToCurSec(insMem);
+				loCnt += INS_SIZE;
 			}
 		}
-		dword insMem = creteMemRep(longVal);
-		secTab->addToTextSec(insMem);
 
-		expectNewLine = true;
 		cdp = NONE;
 		break;
 	}

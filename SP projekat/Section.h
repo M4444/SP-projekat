@@ -61,4 +61,6 @@ public:
 	void setSize(int secSize) { size = secSize - addr; }
 
 	string getName() { return name; }
+	int getAddress() { return addr; }
+	int getSize() { return size; }
 };

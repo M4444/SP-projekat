@@ -50,26 +50,50 @@ private:
 	Section	*section;		// Section pointer
 	bool	defined;		// Defined
 	FRefTab *fRefTab;		// Pointer to forward reference table
+	int		num;
 
 public:
 	Elf_Sym() {}
 	Elf_Sym(string n, bool def, Section *sec, STT t, STB b, int val=0, int s=0)
-		:name(n), value(val), size(s), type(t), binding(b), reserved(0), section(sec), defined(def), fRefTab(NULL) {}
+		:name(n), value(val), size(s), type(t), binding(b), reserved(0), 
+		section(sec), defined(def), fRefTab(NULL), num(0) {}
 
 	string getName() { return name; }
-	void copyInfo(Elf_Sym s) { value = s.value; binding = s.binding; section = s.section; defined = s.defined; }
+	void copyInfo(Elf_Sym s) { value = s.value; type = s.type;  binding = s.binding; section = s.section; defined = s.defined; }
 	char getBinding() { return binding; }
 	Section	*getSection() { return section; }
 	int getValue() { return value; }
-	bool getDef(){ return defined; }
+	bool getDef() { return defined; }
+	char getType() { return type; }
+	int getNum(){ return num; }
+	FRefTab *getFRefTab() { return fRefTab; }
+	FRef removeFRTE() { return fRefTab->removeFRef(); }
+	void setSize(int s) { size = s; }
+	void setAddress(int val) { value = val; }
 	void addFRef(int off, RT type) 
 	{
 		if (fRefTab == NULL) fRefTab = new FRefTab(off, type);
 		else fRefTab->addFRef(off, type);
 	}
+
+	void outSym(ofstream *output, int n)
+	{
+		ofstream &out = *output;
+		num = n;
+
+		string sec;
+		if (section == NULL) sec = "UND";
+		else sec = section->getName();
+		string bind;
+		if (binding == STB_LOCAL) bind = "local";
+		else if (binding == STB_GLOBAL) bind = "global";
+		else bind = "other";
+
+		out << num << ":\t" << name << '\t' << sec << '\t' << value << '\t' << size << '\t' << bind << endl;
+	}
 };
 
-#define INS_SIZE 4;
+#define INS_SIZE 4
 
 // 11:34 ako treba da ima proveru za global i extern simbole, dodatna polja
 

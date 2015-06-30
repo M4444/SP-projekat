@@ -59,6 +59,15 @@ public:
 		}
 	}
 
+	void removeFirst()
+	{
+		if (first) {
+			Elem* stari = first;
+			first = first->next;
+			delete stari;
+		}
+	}
+
 	//Table(const Table& lst);     // - kopije.
 	//void pisi() const;           // Pisanje liste.
 	//void naPocetak(int b) {      // Dodavanje na pocetak.

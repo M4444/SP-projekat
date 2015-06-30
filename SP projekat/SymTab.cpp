@@ -36,3 +36,67 @@ Elf_Sym *SymTab::getSymRef(string name)
 	}
 	return NULL;
 }
+
+Elf_Sym *SymTab::getUnpSym()
+{
+	Elf_Sym *tek;
+	for (resetIterator(); getBoolIt(); iteratorNext())
+	{
+		tek = getItEntPointer(); 
+		FRefTab *f = tek->getFRefTab();
+		if (f->boolFirst() == true) return tek;
+	}
+	return NULL;
+}
+
+void SymTab::setSymSize(string name, int size)
+{
+	Elf_Sym *tek;
+	for (resetIterator(); getBoolIt(); iteratorNext())
+	{
+		tek = getItEntPointer();
+		if (name.compare(tek->getName()) == 0) tek->setSize(size);
+	}
+}
+
+void SymTab::setSymVal(string name, int size)
+{
+	Elf_Sym *tek;
+	for (resetIterator(); getBoolIt(); iteratorNext())
+	{
+		tek = getItEntPointer();
+		if (name.compare(tek->getName()) == 0) tek->setAddress(size);
+	}
+}
+
+void SymTab::outTab(ofstream *output)
+{
+	ofstream &out = *output;
+	
+	Elf_Sym *tek;
+
+	out << "#Symbol table" << endl;
+	out << "#Num:\tName\tSec\tVal\tSize\tBind" << endl;
+	out << "0:\t\tUND\t0\t0\tlocal" << endl;
+	int i = 1;
+	for (resetIterator(); getBoolIt(); iteratorNext())
+	{
+		tek = getItEntPointer();
+		if (tek->getType() == STT_SECTION)
+		{
+			tek->outSym(output, i);
+			i++;
+		}
+	}
+
+	for (resetIterator(); getBoolIt(); iteratorNext())
+	{
+		tek = getItEntPointer();
+		if (tek->getType() != STT_SECTION)
+		{
+			tek->outSym(output, i);
+			i++;
+		}
+	}
+
+}

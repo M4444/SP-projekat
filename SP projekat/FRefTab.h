@@ -1,6 +1,7 @@
 #pragma once
+
 #include "Table.h"
-#include "Elf_Rel.h"
+#include "EnumRelType.h"
 
 class FRef
 {
@@ -11,6 +12,8 @@ public:
 	FRef(){}
 	FRef(int p, RT t) : patch(p), type(t) {}
 	~FRef(){}
+	int getPatch() { return patch; }
+	RT getRelType() { return type; }
 };
 
 class FRefTab : public Table<FRef>
@@ -21,5 +24,14 @@ public:
 	~FRefTab() {}
 
 	void addFRef(int off, RT type) { endInsert(FRef(off, type)); }
+	bool boolFirst() { resetIterator(); return getBoolIt(); }
+	FRef removeFRef()
+	{
+		resetIterator();
+		if (getBoolIt() == false) return FRef(-1, RT_IMM32);
+		FRef fr = getItEnt();
+		removeFirst();
+		return fr;
+	}
 };
 

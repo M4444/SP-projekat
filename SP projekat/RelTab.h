@@ -1,5 +1,8 @@
 #pragma once
 
+#include <iostream>
+#include <fstream>
+#include <iomanip>
 #include "Section.h"
 #include "Table.h"
 #include "Elf_Rel.h"
@@ -20,4 +23,5 @@ public:
 	ByteSection *getBSPointer() { return bTab; }
 
 	int addRel(string name, RT type, int off);
+	void outTab(ofstream *output);
 };
