@@ -31,7 +31,11 @@ public:
 		symTab = new SymTab(); 
 		freftab = new FRefTab();
 	}
-	~SectionTab();
+	~SectionTab()
+	{
+		delete symTab;
+		delete freftab;
+	}
 
 
 	bool sectionExists(string name);
@@ -74,6 +78,11 @@ public:
 	{
 		if (checkBssCur()) throw BSSwrite();
 		else current->endInsert(insMem); 
+	}
+	void addCharToCurSec(char c)
+	{
+		if (checkBssCur()) throw BSSwrite();
+		else current->insert(c);
 	}
 	int addSymRel(string name, RT type, int off);
 

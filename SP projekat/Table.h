@@ -18,7 +18,10 @@ private:
 	Elem *iterator;
 
 protected:
-	void resetIterator() { iterator = first; }
+	void resetIterator() 
+	{
+		iterator = first; 
+	}
 	T getItEnt() { return iterator->entry; }
 	T *getItEntPointer() { return &(iterator->entry); }
 	bool getBoolIt() { return iterator; }
@@ -26,7 +29,7 @@ protected:
 
 	void replItEnt(T newEnt) { iterator->entry = newEnt; }
 public:
-	Table() { first = 0; iterator = (Elem *)4; }
+	Table() { first = 0; iterator = 0/*(Elem *)4*/; }
 	Table(T ent)
 	{
 		first = new Elem(ent);

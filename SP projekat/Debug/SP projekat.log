@@ -1,11 +1,69 @@
-﻿Build started 25.6.2015 1:42:58.
+﻿Build started 5.8.2015 16:00:16.
      1>Project "C:\Users\M\Documents\Visual Studio 2013\Projects\SP projekat\SP projekat\SP projekat.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         D:\Program Files\Programming\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt WordAnalyzer.cpp
+         D:\Program Files\Programming\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ByteSection.cpp FRefTab.cpp RelTab.cpp SectionTab.cpp SymTab.cpp WordAnalyzer.cpp test.cpp
+         ByteSection.cpp
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<FRef>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<FRef>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(27) : see reference to function template instantiation 'bool Table<FRef>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(20) : see reference to class template instantiation 'Table<FRef>' being compiled
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<dword>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<dword>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\bytesection.cpp(53) : see reference to function template instantiation 'bool Table<dword>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\bytesection.h(31) : see reference to class template instantiation 'Table<dword>' being compiled
+         Generating Code...
+         Compiling...
+         test.cpp
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<FRef>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<FRef>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(27) : see reference to function template instantiation 'bool Table<FRef>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(20) : see reference to class template instantiation 'Table<FRef>' being compiled
          WordAnalyzer.cpp
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<FRef>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<FRef>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(27) : see reference to function template instantiation 'bool Table<FRef>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(20) : see reference to class template instantiation 'Table<FRef>' being compiled
+         SymTab.cpp
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<FRef>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<FRef>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(27) : see reference to function template instantiation 'bool Table<FRef>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(20) : see reference to class template instantiation 'Table<FRef>' being compiled
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<Elf_Sym>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<Elf_Sym>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\symtab.cpp(9) : see reference to function template instantiation 'bool Table<Elf_Sym>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\symtab.h(13) : see reference to class template instantiation 'Table<Elf_Sym>' being compiled
+         SectionTab.cpp
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<FRef>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<FRef>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(27) : see reference to function template instantiation 'bool Table<FRef>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(20) : see reference to class template instantiation 'Table<FRef>' being compiled
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<Section *>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<Section *>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\sectiontab.cpp(10) : see reference to function template instantiation 'bool Table<Section *>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\sectiontab.h(20) : see reference to class template instantiation 'Table<Section *>' being compiled
+         RelTab.cpp
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\reltab.cpp(54): warning C4129: 'V' : unrecognized character escape sequence
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<FRef>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<FRef>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(27) : see reference to function template instantiation 'bool Table<FRef>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(20) : see reference to class template instantiation 'Table<FRef>' being compiled
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<Elf_Rel>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<Elf_Rel>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\reltab.cpp(57) : see reference to function template instantiation 'bool Table<Elf_Rel>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\reltab.h(13) : see reference to class template instantiation 'Table<Elf_Rel>' being compiled
+         FRefTab.cpp
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27): warning C4800: 'Table<FRef>::Elem *' : forcing value to bool 'true' or 'false' (performance warning)
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\table.h(27) : while compiling class template member function 'bool Table<FRef>::getBoolIt(void)'
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(27) : see reference to function template instantiation 'bool Table<FRef>::getBoolIt(void)' being compiled
+                 c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\freftab.h(20) : see reference to class template instantiation 'Table<FRef>' being compiled
+         Generating Code...
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\reltab.cpp(43): warning C4715: 'RelTab::addRel' : not all control paths return a value
+     1>c:\users\m\documents\visual studio 2013\projects\sp projekat\sp projekat\sectiontab.cpp(57): warning C4715: 'SectionTab::addSymRel' : not all control paths return a value
        Link:
-         D:\Program Files\Programming\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\M\Documents\Visual Studio 2013\Projects\SP projekat\Debug\SP projekat.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\M\Documents\Visual Studio 2013\Projects\SP projekat\Debug\SP projekat.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\M\Documents\Visual Studio 2013\Projects\SP projekat\Debug\SP projekat.lib" /MACHINE:X86 Debug\SectionTab.obj
-         Debug\Table.obj
+         D:\Program Files\Programming\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\M\Documents\Visual Studio 2013\Projects\SP projekat\Debug\SP projekat.exe" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\M\Documents\Visual Studio 2013\Projects\SP projekat\Debug\SP projekat.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\M\Documents\Visual Studio 2013\Projects\SP projekat\Debug\SP projekat.lib" /MACHINE:X86 Debug\ByteSection.obj
+         Debug\FRefTab.obj
+         Debug\RelTab.obj
+         Debug\SectionTab.obj
          Debug\test.obj
          Debug\SymTab.obj
          Debug\WordAnalyzer.obj
@@ -14,4 +72,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.64
+Time Elapsed 00:00:03.95

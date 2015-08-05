@@ -11,7 +11,10 @@ enum DP		// Directive Process
 	NONE = 0,
 	GLOBAL,
 	EXTERN,
+	CHAR,
+	WORD,
 	LONG,
+	ALIGN,
 	SKIP,
 	SECTION,
 	INSTR
@@ -34,6 +37,7 @@ private:
 	string section;
 	string instr, instrOp[4];
 	int instrOpNum;
+	int val;
 
 	int loCnt;
 
@@ -44,6 +48,7 @@ private:
 	bool determineSec(string sym);
 	bool determineIns(string sym);
 	void creteInstEntry(string instr, string *instrOp, int instrOpNum);
+	void creteCharEntry(string word);
 	void creteLongEntry(string word);
 
 	DP cdp;

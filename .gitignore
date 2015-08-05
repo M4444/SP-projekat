@@ -44,3 +44,8 @@ Temporary Items
 *.exe
 *.suo
 SP projekat.sdf
+*.exe
+Debug/SP projekat.exe
+*.pdb
+*.obj
+*.vcxproj

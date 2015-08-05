@@ -3,7 +3,6 @@
 #include <iostream>
 #include <fstream>
 #include "EnumRelType.h"
-//#include <cstdint>	// za int32_t
 
 WordAnalyzer::WordAnalyzer(char* outSep, char *name)
 {
@@ -23,6 +22,7 @@ WordAnalyzer::WordAnalyzer(char* outSep, char *name)
 
 WordAnalyzer::~WordAnalyzer()
 {
+	delete secTab;
 }
 
 int WordAnalyzer::checkNum(string numS)
@@ -536,6 +536,33 @@ void WordAnalyzer::creteInstEntry(string instr, string *instrOp, int instrOpNum)
 	}
 }
 
+void WordAnalyzer::creteCharEntry(string word)
+{
+	int charVal = 0;
+	if (word[0] == '-')
+	{
+		word.erase(word.begin());
+		charVal = checkNum(word);
+		if (charVal > pow(2, 8 - 1)) throw OutOfRange();
+		if (charVal == 0) throw BadSyntax();
+		charVal *= -1;
+	}
+	else
+	{
+		if (word[0] >= '1' && word[0] <= '9')
+		{
+			charVal = checkNum(word);
+			if (charVal > pow(2, 8 - 1) - 1) throw OutOfRange();
+		}
+		else
+		{
+			//charVal = secTab->addSymRel(word, RT_IMM32, loCnt);	RT_IMM32? koja relokacija? 1B
+		}
+	}
+	//dword insMem = creteMemRep(charVal);							^
+	//secTab->addMemToCurSec(insMem);
+}
+
 void WordAnalyzer::creteLongEntry(string word)
 {
 	int longVal = 0;
@@ -561,9 +588,6 @@ void WordAnalyzer::creteLongEntry(string word)
 	}
 	dword insMem = creteMemRep(longVal);
 	secTab->addMemToCurSec(insMem);
-
-	expectNewLine = true;
-	cdp = NONE;
 }
 
 void WordAnalyzer::backpatching()
@@ -611,11 +635,28 @@ void WordAnalyzer::process(string word, bool newLine)
 				expectSameLine = true;
 				cdp = EXTERN;
 			}
+			else if (word.compare(".char") == 0)
+			{
+				loCnt += 1;
+				expectSameLine = true;
+				cdp = CHAR;
+			}
+			else if (word.compare(".word") == 0)
+			{
+				loCnt += 2;
+				expectSameLine = true;
+				cdp = WORD;
+			}
 			else if (word.compare(".long") == 0)
 			{
 				loCnt += 4;
 				expectSameLine = true;
 				cdp = LONG;
+			}
+			else if (word.compare(".align") == 0)
+			{
+				expectSameLine = true;
+				cdp = ALIGN;
 			}
 			else if (word.compare(".skip") == 0)
 			{
@@ -626,7 +667,7 @@ void WordAnalyzer::process(string word, bool newLine)
 			{
 				// jos nesto za kraj (FRefTab)
 				// ako se skace u okvuru iste sekcije izbrisati zapis o relokaciji na kraju
-				//backpatching();
+				backpatching();
 				writeOutTabs();
 				throw EndOfFile();
 			}
@@ -641,6 +682,7 @@ void WordAnalyzer::process(string word, bool newLine)
 			{
 				word.erase(word.end() - 1);
 				secTab->addToSymTab(word, true, STT_OBJECT/*?*/, STB_LOCAL, loCnt);
+				// labela moze da stoji i u praznoj liniji i tada je njena vrednost jednaka adresi prve sledece instrukcije
 			}
 			else if (!determineIns(word)) throw BadSyntax();	// da li je instrukcija
 			else
@@ -709,21 +751,48 @@ void WordAnalyzer::process(string word, bool newLine)
 		}
 		break;
 
+	case CHAR:
+		//creteCharEntry(word);
+		expectNewLine = true;
+		cdp = NONE;
+		break;
+	case WORD: 
+		//creteWordEntry(word);
+		expectNewLine = true;
+		cdp = NONE;
+		break;
 	case LONG:
 		creteLongEntry(word);
+		expectNewLine = true;
+		cdp = NONE;
+		break;
+
+	case ALIGN:
+		val = checkNum(word);
+		if (secTab->checkBssCur()) loCnt += val - (loCnt % val);
+		else
+		{
+			while (loCnt % val)
+			{
+				secTab->addCharToCurSec(0);
+				loCnt++;
+			}
+		}
+
+		cdp = NONE;
 		break;
 
 	case SKIP:
-		int val = checkNum(word);
+		val = checkNum(word);
 		if (secTab->checkBssCur()) loCnt += val;
 		else
 		{
-			if ((val % INS_SIZE) != 0) throw BadSyntax();
-			dword insMem = creteMemRep(0);
-			for (int i = 0; i < val / INS_SIZE; i++)
+			//if ((val % INS_SIZE) != 0) throw BadSyntax();
+			//dword insMem = creteMemRep(0);
+			for (int i = 0; i < val; i++)
 			{
-				secTab->addMemToCurSec(insMem);
-				loCnt += INS_SIZE;
+				secTab->addCharToCurSec(0);
+				loCnt++;
 			}
 		}
 

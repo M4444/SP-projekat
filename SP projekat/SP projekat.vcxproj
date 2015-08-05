@@ -78,15 +78,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ByteSection.cpp" />
+    <ClCompile Include="FRefTab.cpp" />
+    <ClCompile Include="RelTab.cpp" />
     <ClCompile Include="SectionTab.cpp" />
-    <ClCompile Include="Table.cpp" />
     <ClCompile Include="test.cpp" />
     <ClCompile Include="SymTab.cpp" />
     <ClCompile Include="WordAnalyzer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Elf_Shdr.h" />
+    <ClInclude Include="ByteSection.h" />
+    <ClInclude Include="Elf_Rel.h" />
     <ClInclude Include="Elf_Sym.h" />
+    <ClInclude Include="EnumRelType.h" />
+    <ClInclude Include="FRefTab.h" />
+    <ClInclude Include="RelTab.h" />
     <ClInclude Include="Section.h" />
     <ClInclude Include="SectionTab.h" />
     <ClInclude Include="SymTab.h" />

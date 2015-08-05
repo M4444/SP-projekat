@@ -3,15 +3,6 @@
 #include "ByteSection.h"
 #include "WordAnalyzer.h"
 
-//SectionTab::SectionTab()
-//{
-//}
-
-
-SectionTab::~SectionTab()
-{
-}
-
 bool SectionTab::sectionExists(string name)
 {
 	Section *sec;

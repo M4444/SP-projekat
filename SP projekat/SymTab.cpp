@@ -44,7 +44,8 @@ Elf_Sym *SymTab::getUnpSym()
 	{
 		tek = getItEntPointer(); 
 		FRefTab *f = tek->getFRefTab();
-		if (f->boolFirst() == true) return tek;
+		if (f != NULL)
+			if (f->boolFirst() == true) return tek;
 	}
 	return NULL;
 }

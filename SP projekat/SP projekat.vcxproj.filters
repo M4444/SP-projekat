@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Tables">
+      <UniqueIdentifier>{db221436-7abf-4b17-a1f6-991395cba09c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WordAnalyzer.cpp">
@@ -27,7 +30,13 @@
     <ClCompile Include="SectionTab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Table.cpp">
+    <ClCompile Include="FRefTab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RelTab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ByteSection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,22 +44,34 @@
     <ClInclude Include="WordAnalyzer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SymTab.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SectionTab.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Elf_Sym.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Table.h">
+    <ClInclude Include="Elf_Rel.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RelTab.h">
+      <Filter>Header Files\Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteSection.h">
+      <Filter>Header Files\Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="Table.h">
+      <Filter>Header Files\Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="SectionTab.h">
+      <Filter>Header Files\Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="SymTab.h">
+      <Filter>Header Files\Tables</Filter>
     </ClInclude>
     <ClInclude Include="Section.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Tables</Filter>
     </ClInclude>
-    <ClInclude Include="Elf_Shdr.h">
+    <ClInclude Include="FRefTab.h">
+      <Filter>Header Files\Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumRelType.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

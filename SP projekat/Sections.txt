@@ -9,8 +9,8 @@ offset		Type		Val[.data]:
 00000032	RT_IMM32	5
 00000040	RT_IMM32	6
 #.text
-fc ff 1f 4e   00 00 00 4e   fc ff 1f 4e   00 00 00 4e   
+fc ff 1f 4e   00 00 00 4e   fc ff 1f 4e   10 00 00 4e   
 0c 00 00 00   00 00 50 65   00 00 94 65   00 00 18 65   
 #.data
-00 00 00 00   00 00 00 00   0c 00 00 00   fc ff ff ff   
+24 00 00 00   18 00 00 00   0c 00 00 00   fc ff ff ff   
 00 00 00 00   fc ff ff ff   
